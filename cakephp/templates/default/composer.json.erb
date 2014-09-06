@@ -1,0 +1,23 @@
+{
+    "name": "sbems",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "http://pear.cakephp.org"
+        }
+    ],
+    "require": {
+        "cakephp/cakephp": ">=<%= node['cakephp']['version'] %>",
+        <% unless node['cakephp']['plugin'].nil? or node['cakephp']['plugin'].empty? %>
+            <%= node['cakephp']['plugin'] %>
+        <% end %>
+    },
+    "config": {
+        "vendor-dir": "<%= node['cakephp']['vendor_dir'] %>"
+    },
+    "extra": {
+        "installer-paths": {
+            "plugins/{$name}/": ["type:cakephp-plugin"]
+        }
+    }
+}

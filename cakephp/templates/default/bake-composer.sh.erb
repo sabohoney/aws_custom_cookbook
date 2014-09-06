@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+
+<%= @include_path %>/Vendor/bin/cake bake project --empty -v <%= @app_path %>/app
+
+# load composer autoloader in bootstrap.php
+cat <<EOT >> <%= @app_path %>/app/Config/bootstrap.php
+
+// Load composer autoload.
+require '<%= @include_path %>/Vendor/autoload.php';
+
+// Remove and re-prepend CakePHP's autoloader as composer thinks it is the most important.
+// See https://github.com/composer/composer/commit/c80cb76b9b5082ecc3e5b53b1050f76bb27b127b
+spl_autoload_unregister(array('App', 'load'));
+spl_autoload_register(array('App', 'load'), true, true);
+EOT
+
+# set permission
+chown -R nginx:<%= node['cakephp']['group'] %> <%= @app_path %>/app
+chmod -R o+w <%= @app_path %>/app/tmp/
+
+# CakePHP Lib Symbolic Link
+ln -s <%= @include_path %>/Vendor/cakephp/cakephp/lib <%= @app_path %>/lib
+ln -s <%= @include_path %>/Vendor/cakephp/cakephp/plugins <%= @app_path %>/plugins
+ln -s <%= @include_path %>/Vendor/cakephp/cakephp/vendors <%= @app_path %>/vendors

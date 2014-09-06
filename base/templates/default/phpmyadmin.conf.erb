@@ -1,0 +1,7 @@
+Alias /phpmyadmin /opt/phpmyadmin
+Alias /phpMyAdmin /opt/phpmyadmin
+
+<Location <%= node['phpmyadmin']['home'] %>>
+Order allow,deny
+Allow from all
+</Location> 
